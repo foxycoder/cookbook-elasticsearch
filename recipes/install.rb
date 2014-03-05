@@ -16,6 +16,17 @@ user node[:elasticsearch][:user] do
   action  :create
 end
 
+# Create Directories
+[ node[:elasticsearch][:path][:conf], node[:elasticsearch][:path][:data], node[:elasticsearch][:path][:logs], node[:elasticsearch][:path][:pids] ].each do |path|
+  directory path do
+    owner node[:elasticsearch][:user]
+    group node[:elasticsearch][:user]
+    mode 0755
+    recursive true
+    action :create
+  end
+end
+
 # Install ElasticSearch
 script "install_elasticsearch" do
   interpreter "bash"
